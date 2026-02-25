@@ -1,5 +1,5 @@
-// Project Title
-// Your Name
+// Connect Four
+// Chuyan Wang
 // Date
 //
 // Extra for Experts:
