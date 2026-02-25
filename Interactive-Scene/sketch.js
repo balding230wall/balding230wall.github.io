@@ -8,7 +8,6 @@
 
 let turn;
 
-
 function setup() {
   createCanvas(400, 400);
 }
@@ -18,7 +17,7 @@ function draw() {
   drawBack();
   playerOne();
   playerTwo();
-  
+  selection();
 }
 
 function drawBack(){
@@ -45,4 +44,9 @@ function playerTwo(){
   if (turn === false){
     fill("yellow");
   }
+}
+
+function selection(){
+  rect(25, 10, 50, 390);
+  fill("grey");
 }
