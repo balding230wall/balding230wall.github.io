@@ -7,16 +7,16 @@
 
 
 let turn;
+let column = 25;
 
 function setup() {
   createCanvas(400, 400);
 }
 
 function draw() {
-  background(220);
-  drawBack();
   playerOne();
   playerTwo();
+  drawBack();
   selection();
 }
 
@@ -47,6 +47,20 @@ function playerTwo(){
 }
 
 function selection(){
+  fill(0, 100);
   rect(25, 10, 50, 390);
-  fill("grey");
+}
+
+function keyPressed(){
+  if (keyCode === RIGHT_ARROW){
+    fill(0, 100);
+    rect(column, 10, 50, 390);
+    column = column + 25;
+  }
+  
+  if (keyCode === LEFT_ARROW){
+    fill(0, 100);
+    rect(column, 10, 50, 390);
+    column = column - 25;
+  }
 }
