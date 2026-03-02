@@ -1,6 +1,6 @@
 // Connect Four
 // Chuyan Wang
-// Date
+// March 3, 2026
 //
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
@@ -17,11 +17,11 @@ function setup() {
 function draw() {
   playerOne();
   playerTwo();
-  drawBack();
-  selection();
+  drawBackground();
+  selectionBox();
 }
 
-function drawBack(){
+function drawBackground(){
   rect(25, 10, 350, 390);
   for (let step1 = 0.70; step1 < 8; step1++){
     for (let step = 1; step < 8; step++){
@@ -47,7 +47,7 @@ function playerTwo(){
   }
 }
 
-function selection(){
+function selectionBox(){
   fill(0, 100);
   rect(column, 10, 50, 390);
 }
