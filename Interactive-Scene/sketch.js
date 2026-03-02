@@ -15,9 +15,9 @@ let board = [];
 function setup() {
   createCanvas(400, 400);
 
-  for (let r = 0; r < 8; r++) {
+  for (let r = 0; r < 7; r++) {
     board[r] = [];
-    for (let c = 0; c < 8; c++) {
+    for (let c = 0; c < 7; c++) {
       board [r] [c] = 0;
     }
   }
@@ -32,12 +32,12 @@ function draw() {
 
 function drawBackground(){
   fill("black");
-  rect(25, 10, 350, 390);
+  rect(25, 0, 350, 380);
 
   fill("white")
-  for (let r = 0; r < 8; r++){
-    for (let c = 0; c < 8; c++){
-      circle(c * 50 + 50, r * 50 + 50, 25);
+  for (let r = 0; r < 7; r++){
+    for (let c = 0; c < 7; c++){
+      circle(c * 50 + 50, r * 50 + 50, 40);
     }
   }
 }
@@ -61,13 +61,13 @@ function playerTwo(){
 
 function selectionBox(){
   fill(0, 100);
-  rect(column, 10, 50, 390);
+  rect(column, 0, 50, 370);
 }
 
 function keyPressed(){
   if (keyCode === RIGHT_ARROW){
     fill(0, 100);
-    rect(column, 10, 50, 390);
+    rect(column, 0, 50, 380);
     if (column < 300){
       column = column + 50;
     }
@@ -75,7 +75,7 @@ function keyPressed(){
   
   if (keyCode === LEFT_ARROW){
     fill(0, 100);
-    rect(column, 10, 50, 390);
+    rect(column, 0, 50, 380);
     if (column > 50){
       column = column - 50;
     }
