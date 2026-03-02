@@ -49,19 +49,23 @@ function playerTwo(){
 
 function selection(){
   fill(0, 100);
-  rect(25, 10, 50, 390);
+  rect(column, 10, 50, 390);
 }
 
 function keyPressed(){
   if (keyCode === RIGHT_ARROW){
     fill(0, 100);
     rect(column, 10, 50, 390);
-    column = column + 25;
+    if (column < 300){
+      column = column + 50;
+    }
   }
   
   if (keyCode === LEFT_ARROW){
     fill(0, 100);
     rect(column, 10, 50, 390);
-    column = column - 25;
-  }
+    if (column > 50){
+      column = column - 50;
+    }
+  } 
 }
