@@ -8,10 +8,19 @@
 
 let turn;
 let column = 25;
-let row = 30;
+let board = [];
+
+
 
 function setup() {
   createCanvas(400, 400);
+
+  for (let r = 0; r < 8; r++) {
+    board[r] = [];
+    for (let c = 0; c < 8; c++) {
+      board [r] [c] = 0;
+    }
+  }
 }
 
 function draw() {
@@ -22,10 +31,13 @@ function draw() {
 }
 
 function drawBackground(){
+  fill("black");
   rect(25, 10, 350, 390);
-  for (let step1 = 0.70; step1 < 8; step1++){
-    for (let step = 1; step < 8; step++){
-      circle(step * 50, step1 * 50, 25);
+
+  fill("white")
+  for (let r = 0; r < 8; r++){
+    for (let c = 0; c < 8; c++){
+      circle(c * 50 + 50, r * 50 + 50, 25);
     }
   }
 }
