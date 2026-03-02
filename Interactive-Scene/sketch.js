@@ -8,6 +8,7 @@
 
 let turn;
 let column = 25;
+let row = 25;
 
 function setup() {
   createCanvas(400, 400);
