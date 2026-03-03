@@ -115,7 +115,7 @@ function placePiece(currentColumn) {
 function drawPieces() {
 /*
 constantly checks each value in the array. If it finds a value claimed by a player (either turning to
-one or two), created a colored circle there based on who claimed it.
+one or two), it will create a colored circle there based on who claimed it.
 */
     for (let pieceRow = 0; pieceRow < 7; pieceRow++){
       for (let pieceColumn = 0; pieceColumn < 7; pieceColumn++){
@@ -166,7 +166,7 @@ function checkWin(){
     }
   }
 
-  //checks for a possible diagonol win one way
+  //checks for a possible diagonal win one way
   for (let boardColumn = 0; boardColumn < 4; boardColumn++){
     for (let boardRow = 0; boardRow < 4; boardRow++){
       let checkForFour = board[boardRow][boardColumn];
