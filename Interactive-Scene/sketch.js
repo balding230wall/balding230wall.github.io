@@ -46,7 +46,7 @@ function drawBackground(){
       circle(boardColumn * 50 + 50, boardRow * 50 + 50, 40);
     }
   }
- }
+}
 
 
 function selectionBox(){
@@ -117,18 +117,18 @@ function drawPieces() {
 constantly checks each value in the array. If it finds a value claimed by a player (either turning to
 one or two), it will create a colored circle there based on who claimed it.
 */
-    for (let pieceRow = 0; pieceRow < 7; pieceRow++){
-      for (let pieceColumn = 0; pieceColumn < 7; pieceColumn++){
+  for (let pieceRow = 0; pieceRow < 7; pieceRow++){
+    for (let pieceColumn = 0; pieceColumn < 7; pieceColumn++){
         
-        if (board[pieceRow][pieceColumn] === 1){
-          fill("red");
-          circle(pieceColumn * 50 + 50, pieceRow * 50 + 50, 40);
-        }
+      if (board[pieceRow][pieceColumn] === 1){
+        fill("red");
+        circle(pieceColumn * 50 + 50, pieceRow * 50 + 50, 40);
+      }
        
-        if (board[pieceRow][pieceColumn] === 2){
-          fill("yellow");
-          circle(pieceColumn * 50 + 50, pieceRow * 50 + 50, 40);
-        }
+      if (board[pieceRow][pieceColumn] === 2){
+        fill("yellow");
+        circle(pieceColumn * 50 + 50, pieceRow * 50 + 50, 40);
+      }
     }
   }
 }
