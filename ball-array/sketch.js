@@ -18,7 +18,24 @@ function draw() {
     ball.x += ball.dx;
     ball.y += ball.dy;
 
+    fill(ball.r, ball.g, ball.b);
     circle(ball.x, ball.y, ball.radius * 2);
+
+    // if (ball.x > windowWidth || ball.x < 0){
+    //   ball.dx = ball.dx * -1;
+    // }
+    // if (ball.y > windowHeight || ball.y < 0){
+    //   ball.dy = ball.dy * -1;
+    // }
+
+    if (ball.x > windowWidth || ball.x < 0){
+      ball.x = windowWidth/2;
+      ball.y = windowHeight/2;
+    }
+    if (ball.y > windowHeight || ball.y < 0){
+      ball.x = windowWidth/2;
+      ball.y = windowHeight/2;
+    }
   }
 }
 
@@ -33,7 +50,9 @@ function spawnBall(_x, _y){
     dx: random(-5, 5),
     dy: random(-5, 5),
     radius: random(10, 30),
-    r: andom(0, 255),
+    r: random(0, 255),
+    g: random(0, 255),
+    b: random(0, 255),
 
     
   };
