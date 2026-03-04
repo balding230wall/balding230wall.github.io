@@ -23,16 +23,18 @@ function draw() {
 }
 
 function mousePressed(){
-  spawnBall();
+  spawnBall(mouseX, mouseY);
 }
 
-function spawnBall(){
+function spawnBall(_x, _y){
   let someBall = {
-    x: random(width),
-    y: random(height),
+    x: _x,
+    y: _y,
     dx: random(-5, 5),
     dy: random(-5, 5),
-    radius: random(10, 30)
+    radius: random(10, 30),
+    r: andom(0, 255),
+
     
   };
   ballArray.push(someBall);
