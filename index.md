@@ -9,3 +9,4 @@
 
 ## Assignments
  - [Interactive Scene](Interactive-Scene)
+ - [Array and Object Notation](array-object)
