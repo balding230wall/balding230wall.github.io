@@ -44,4 +44,8 @@ function draw() {
   else{
     circleTwo.circleDiameterTwo = circleOne.circleDiameterOne - 25;
   }
+
+  stroke("white");
+  line(windowWidth/2, windowHeight/2, 0, 0);
 }
+
