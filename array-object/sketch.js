@@ -44,8 +44,12 @@ function draw() {
   else{
     circleTwo.circleDiameterTwo = circleOne.circleDiameterOne - 25;
   }
-
-  stroke("white");
-  line(windowWidth/2, windowHeight/2, 0, 0);
+  
+  stroke("#00F7FF");
+  noFill();
+  curve(windowWidth/2, windowHeight * -1, 0, 0, windowWidth/2, windowHeight/2, windowWidth, windowHeight/4);
+  curve(windowWidth/2, windowHeight * -1, windowWidth, 0, windowWidth/2, windowHeight/2, 0, windowHeight/4);
+  curve(windowWidth/2, windowHeight * 2, windowWidth, windowHeight, windowWidth/2, windowHeight/2, 0, windowHeight * 3/4);
+  curve(windowWidth/2, windowHeight * 2, 0, windowHeight, windowWidth/2, windowHeight/2, windowWidth, windowHeight * 3/4);
 }
 
