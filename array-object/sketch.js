@@ -15,6 +15,14 @@ let circleTwo = {
   radiusDecayTwo: 10
 };
 
+let myCurve = {
+  lastControlWidth: 0,
+  lastControlHeightMultiplier: 1/4,
+  firstControlHeightMultiplier: -1,
+  firstXPoint: 0,
+  firstYPoint: 0
+};
+
 function setup() {
   createCanvas(windowWidth, windowHeight);
   circleOne.circleDiameterOne = windowHeight + 100;
@@ -45,11 +53,41 @@ function draw() {
     circleTwo.circleDiameterTwo = circleOne.circleDiameterOne - 25;
   }
   
+  let myCurve = {
+    lastControlWidth: 0,
+    lastControlHeightMultiplier: 1/4,
+    firstControlHeightMultiplier: -1,
+    firstXPoint: 0,
+    firstYPoint: 0
+  };
+
+
+
+
   stroke("#00F7FF");
   noFill();
-  curve(windowWidth/2, windowHeight * -1, 0, 0, windowWidth/2, windowHeight/2, windowWidth, windowHeight/4);
-  curve(windowWidth/2, windowHeight * -1, windowWidth, 0, windowWidth/2, windowHeight/2, 0, windowHeight/4);
+  curve(windowWidth/2, windowHeight * -1, 0, 0, windowWidth/2, windowHeight/2, windowWidth, windowHeight * 1/4);
+  curve(windowWidth/2, windowHeight * -1, windowWidth, 0, windowWidth/2, windowHeight/2, 0, windowHeight * 1/4);
   curve(windowWidth/2, windowHeight * 2, windowWidth, windowHeight, windowWidth/2, windowHeight/2, 0, windowHeight * 3/4);
   curve(windowWidth/2, windowHeight * 2, 0, windowHeight, windowWidth/2, windowHeight/2, windowWidth, windowHeight * 3/4);
 }
 
+function animateCurve(){
+  let counter1 = 10;
+  let counter2 = 0.5/(windowWidth/10);
+  let counter3 = 2/(windowWidth/10);
+  
+  if (myCurve.lastControlWidth === windowWidth || myCurve.lastControlWidth === 0){
+    counter1 *= -1;
+  }
+  myCurve.lastControlWidth += counter1;
+
+  if (myCurve.lastControlHeightMultiplier === 1/4 || myCurve.lastControlHeightMultiplier === 3/4){
+    counter2 *= -1;
+  }
+  myCurve.lastControlHeightMultiplier += counter2;
+
+  if (myCurve.firstControlHeightMultiplier === 2 || myCurve.firstControlHeightMultiplier === -1){
+    counter3 -1;
+  }
+}
