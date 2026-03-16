@@ -1,6 +1,6 @@
 // Cool Spiral Animation
 // Chuyan Wang
-// Date
+// March 18, 2026
 //
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
@@ -17,17 +17,33 @@ let circleTwo = {
 
 let curveRotation = 0;
 
+let myButton = {
+  x: 0,
+  y: 0,
+  w: 200,
+  h: 100,
+};
+
+let button1 = false;
+let button2 = false;
+let button3 = false;
+
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  
   circleOne.circleDiameterOne = windowHeight + 100;
   circleTwo.circleDiameterTwo = circleOne.circleDiameterOne - 25;
+
+  myButton.x = windowWidth/2;
+  myButton.y = windowHeight/2 - 100;
 
 }
 
 function draw() {
   background(0);
-  animateRing();
-  animateCurve();
+  createButtons();
+//   animateRing();
+//   animateCurve();
 }
 
 function animateRing() {
@@ -69,4 +85,54 @@ function animateCurve() {
   pop();
 
   curveRotation = curveRotation + 0.05;
+}
+
+function createButtons(){
+  if (button1){
+    animateRing();
+    animateCurve();
+  }
+  
+  if (button2){
+    console.log("Hi");
+  }
+
+  if (button3){
+    if (button1){
+      button1 = !button1;
+    }
+    else if(button2){
+      button2 = !button2;
+    }
+  }
+ 
+  if (!button1 && !button2){
+    fill(255);
+    rect(myButton.x - 425, myButton.y, myButton.w, myButton.h);
+    rect(myButton.x + 225, myButton.y, myButton.w, myButton.h);
+
+    fill(0);
+    textSize(20);
+    text("Cool Animation", myButton.x - 400, myButton.y + myButton.h/2);
+    text("Cooler Animation", myButton.x + 250, myButton.y + myButton.h/2);
+  }
+
+  if (button1 || button2){
+    fill(255);
+    rect(myButton.x - 425, myButton.y, myButton.w, myButton.h);
+    text("Return", myButton.x - 400, myButton.y + myButton.h/2);
+  }
+}
+
+
+function mousePressed() {
+  if (!button1 && !button2){
+    if (mouseX > myButton.x - 425 && mouseX < myButton.x - 425 + myButton.w && mouseY > myButton.y && mouseY < myButton.y + myButton.h) {
+      button1 = !button1;
+    }
+    
+    if (mouseX > myButton.x + 225 && mouseX < myButton.x + 225 + myButton.w && mouseY > myButton.y && mouseY < myButton.y + myButton.h){
+      button2 = !button2;
+    }
+  }
 }
