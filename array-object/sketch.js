@@ -26,7 +26,6 @@ let myButton = {
 
 let button1 = false;
 let button2 = false;
-let button3 = false;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -42,11 +41,9 @@ function setup() {
 function draw() {
   background(0);
   createButtons();
-//   animateRing();
-//   animateCurve();
 }
 
-function animateRing() {
+function animateRing1() {
   fill("#BC13FE");
   noStroke();
   circle(windowWidth/2, windowHeight/2, circleOne.circleDiameterOne);
@@ -69,7 +66,7 @@ function animateRing() {
   }
 }
 
-function animateCurve() {
+function animateCurve1() {
   push();
   translate(windowWidth/2, windowHeight/2);
   rotate(curveRotation);
@@ -89,21 +86,12 @@ function animateCurve() {
 
 function createButtons(){
   if (button1){
-    animateRing();
-    animateCurve();
+    animateRing1();
+    animateCurve1();
   }
   
   if (button2){
     console.log("Hi");
-  }
-
-  if (button3){
-    if (button1){
-      button1 = !button1;
-    }
-    else if(button2){
-      button2 = !button2;
-    }
   }
  
   if (!button1 && !button2){
@@ -119,8 +107,11 @@ function createButtons(){
 
   if (button1 || button2){
     fill(255);
-    rect(myButton.x - 425, myButton.y, myButton.w, myButton.h);
-    text("Return", myButton.x - 400, myButton.y + myButton.h/2);
+    rect(0, 0, 50, 20);
+
+    textSize(10);
+    fill(0);
+    text("Return", 0, 10);
   }
 }
 
@@ -135,4 +126,15 @@ function mousePressed() {
       button2 = !button2;
     }
   }
+  if (button1 || button2){
+    if (mouseX > 0 && mouseX < 50 && mouseY > 0 && mouseY < 20){
+      if (button1){
+        button1 = !button1;
+     }
+      else if(button2){
+        button2 = !button2;
+      }
+    }
+  }
 }
+
