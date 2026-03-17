@@ -314,7 +314,7 @@ function drawCurves2(){
   if (frameCount % 10 === 0){
     randomColorPicker = floor(random(colorPalette.length));
   }
-
+  
   //Sets the stroke weight and stroke color for the curves
   stroke(colorPalette[randomColorPicker]);
   strokeWeight(1);
@@ -360,6 +360,7 @@ function drawRings2(){
   if (frameCount % 10 === 0){
     randomColorPicker = floor(random(colorPalette.length));
   }
+
   //Sets the stroke weight and stroke color for the circle
   stroke(colorPalette[randomColorPicker]);
   strokeWeight(3);
