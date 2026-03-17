@@ -50,7 +50,7 @@ let colorGradient = 0;
 
 //Sets the array that contains the colors for the second drawing
 let colorPalette = ["#FF1900", "#FF8800", "#FFCC00", "#FFFA00", "#D8FF00","#B6FF00", "#00FF2E", "#00FFA5", "#00FFE1", "#00DDFF", "#057DFF", "#9800FF", "#D400FF", "#FF00E4", "#FF008C"];
-//Sets the variable that randomly picks from the colorPalette array
+//Stores the index of the randomly selected color from the colorPalette
 let randomColorPicker = 0;
 
 //Sets the variable that is used to rotate the curves in both drawings
@@ -59,7 +59,7 @@ let curveRotation = 0;
 //Sets how many vertices each curve in the second drawing is made up of
 let numberOfSegments = 40;
 //Sets the variables that controls how many curves are in the second drawing
-let numberOfArms = 10;
+let numberOfCurves = 10;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -83,18 +83,21 @@ function draw() {
 }
 
 function drawRing1() {
-  //push and pop used to only apply the colorMode change to the first circle
-  push()
+  //push and pop temporarily change colorMode to set the fill color
+  push();
+  
   //changes the color mode
   colorMode(HSB, 255);
   //fills the circle based on colorGradient
   fill(colorGradient, 255, 255);
-  pop()
+  
 
   //draws the first circle
   noStroke();
   circle(windowWidth/2, windowHeight/2, circleOne.circleDiameterOne);
   
+  pop();
+
   //draws the second circle, filling it black to create the look of a ring
   fill("black");
   circle(windowWidth/2, windowHeight/2, circleTwo.circleDiameterTwo);
@@ -127,6 +130,7 @@ function drawRing1() {
 function drawCurves1() {
   //uses push and pop to limit the rotation to the curves
   push();
+  
   //moves (0, 0) to the center of the screen
   translate(windowWidth/2, windowHeight/2);
   //rotates the coordinate system around (0, 0)
@@ -148,6 +152,7 @@ function drawCurves1() {
 
   //uses push and pop to limit the rotation to the curves
   push();
+  
   //moves(0, 0) to the center of the screen
   translate(windowWidth/2, windowHeight/2);
   //rotates the coordinate system around (0, 0) the other way compared to earlier in the function
@@ -180,53 +185,22 @@ function drawCurves1() {
   }
 }
 
-function createButtons(){
-  if (button1){
-    drawRing1();
-    drawCurves1();
-  }
-  
-  if (button2){
-    drawRings2();
-    drawCurves2();
-  }
- 
-  if (!button1 && !button2){
-    fill(255);
-    rect(myButton.x - 425, myButton.y, myButton.w, myButton.h);
-    rect(myButton.x + 225, myButton.y, myButton.w, myButton.h);
-
-    fill(0);
-    textSize(20);
-    stroke("white");
-    text("Cool Animation", myButton.x - 400, myButton.y + myButton.h/2);
-    text("Cooler Animation", myButton.x + 250, myButton.y + myButton.h/2);
-  }
-
-  if (button1 || button2){
-    noStroke();
-    fill(255);
-    rect(0, 0, 50, 20);
-
-    textSize(10);
-    fill(0);
-    stroke("white");
-    text("Return", 0, 10);
-  }
-}
-
-
 function mousePressed() {
+  //Makes the selection buttons only clickable if they are both false
   if (!button1 && !button2){
+    //Turns the selection button one from false to true when clicked 
     if (mouseX > myButton.x - 425 && mouseX < myButton.x - 425 + myButton.w && mouseY > myButton.y && mouseY < myButton.y + myButton.h) {
       button1 = !button1;
     }
-    
+    //Turns the selection button two from false to true when clicked 
     if (mouseX > myButton.x + 225 && mouseX < myButton.x + 225 + myButton.w && mouseY > myButton.y && mouseY < myButton.y + myButton.h){
       button2 = !button2;
     }
   }
+
+  //Makes the return buttons only clickable if one of the selection buttons is true
   if (button1 || button2){
+    //When the return button is clicked, if selection button one is true, turn it to false. Vice versa for selection button two
     if (mouseX > 0 && mouseX < 50 && mouseY > 0 && mouseY < 20){
       if (button1){
         button1 = !button1;
@@ -238,86 +212,165 @@ function mousePressed() {
   }
 }
 
+function createButtons(){
+  //Draws the curves and rings to make up the first drawing if selection button one is true
+  if (button1){
+    drawRing1();
+    drawCurves1();
+  }
+  
+  //Draws the curves and rings to make up the second drawing if selection button two is true
+  if (button2){
+    drawRings2();
+    drawCurves2();
+  }
+ 
+  //Draws selection buttons one and two only if they are both false
+  if (!button1 && !button2){
+    fill(255);
+    rect(myButton.x - 425, myButton.y, myButton.w, myButton.h);
+    rect(myButton.x + 225, myButton.y, myButton.w, myButton.h);
+
+    //Draws the text on top of the selection buttons
+    fill(0);
+    textSize(20);
+    stroke("white");
+    text("Cool Animation", myButton.x - 400, myButton.y + myButton.h/2);
+    text("Cooler Animation", myButton.x + 250, myButton.y + myButton.h/2);
+  }
+
+  //Makes a return button if one of the buttons is true
+  if (button1 || button2){
+    noStroke();
+    fill(255);
+    rect(0, 0, 50, 20);
+
+    //Draws the text for the return button
+    textSize(10);
+    fill(0);
+    stroke("white");
+    text("Return", 0, 10);
+  }
+}
+
 function drawCurves2(){
+  //uses push and pop to limit the rotation to the curves
   push();
 
+  //moves(0, 0) to the center of the screen
   translate(windowWidth/2, windowHeight/2);
+  //rotates the coordinate system around (0, 0)
   rotate(curveRotation);
 
+  //changes the color every 10 frames to create a smoother effect
   if (frameCount % 10 === 0){
     randomColorPicker = floor(random(colorPalette.length));
   }
+
+  //Sets the stroke weight and stroke color for the curves
   stroke(colorPalette[randomColorPicker]);
   strokeWeight(1);
   noFill();
 
-  for (let armCounter = 0; armCounter < numberOfArms; armCounter++){
-    let armAngle = armCounter/numberOfArms * TWO_PI;
+  //Draws the number of curves as set earlier
+  for (let curveCounter = 0; curveCounter < numberOfCurves; curveCounter++){
+    //Spreads the curves evenly around a circle
+    let curveAngle = curveCounter/numberOfCurves * TWO_PI;
 
+    //Begins drawing the custom shape
     beginShape();
 
+    //Creates the points for each curve
     for (let segmentCounter = 0; segmentCounter < numberOfSegments; segmentCounter++){
-      let p = segmentCounter/numberOfSegments;
-      let distanceFromCenter = 10 * pow(40, p * 1.1);
-      let theta = armAngle + p * PI;
+      //Creates a variable that tracks how far along the curve each point is
+      let segmentProgress = segmentCounter/numberOfSegments;
+      //Calculates how far each point is from the center. This value grows exponentially
+      let distanceFromCenter = 10 * pow(40, segmentProgress * 1.1);
+      //Calculates the angle around the center. The curve rotates as it moves outwards
+      let theta = curveAngle + segmentProgress * PI;
 
+      //Converts the polar coordinates into the coordinates on screen
       let x = distanceFromCenter * cos(theta);
       let y = distanceFromCenter * sin(theta);
 
+      //Draws the point. Many of the these for each curve
       vertex(x, y);
     }
+    //Stops drawing the custom shape
     endShape();
   }
 
   pop();
 
+  //uses push and pop to limit the rotation to the curves
   push();
 
+  //moves(0, 0) to the center of the screen
   translate(windowWidth/2, windowHeight/2);
+  //rotates the coordinate system around (0, 0) the other way compared to earlier in the function
   rotate(-curveRotation);
 
+  //changes the color every 10 frames to create a smoother effect
   if (frameCount % 10 === 0){
     randomColorPicker = floor(random(colorPalette.length));
   }
+
+  //Sets the stroke weight and stroke color for the curves
   stroke(colorPalette[randomColorPicker]);
   strokeWeight(1);
   noFill();
 
-  for (let armCounter = 0; armCounter < numberOfArms; armCounter++){
-    let armAngle = armCounter/numberOfArms * TWO_PI;
-
+  //Draws the number of curves as set earlier
+  for (let curveCounter = 0; curveCounter < numberOfCurves; curveCounter++){
+    //Spreads the curves evenly around a circle
+    let curveAngle = curveCounter/numberOfCurves * TWO_PI;
+    
+    //Begins drawing the custom shape
     beginShape();
 
+    //Creates the points for each curve
     for (let segmentCounter = 0; segmentCounter < numberOfSegments; segmentCounter++){
+      //Creates a variable that tracks how far along the curve each point is
       let segmentProgress = segmentCounter/numberOfSegments;
+      //Calculates how far each point is from the center. This value grows exponentially
       let distanceFromCenter = 10 * pow(40, segmentProgress * 1.1);
-      let theta = armAngle + segmentProgress * PI;
+      //Calculates the angle around the center. The curve rotates as it moves outwards
+      let theta = curveAngle + segmentProgress * PI;
 
+      //Converts the polar coordinates into the coordinates on screen
       let x = distanceFromCenter * cos(theta);
       let y = distanceFromCenter * sin(theta);
 
+      //Draws the point. Many of the these for each curve
       vertex(x, y);
     }
+    //Stops drawing the custom shape
     endShape();
   }
 
   pop();
   
+  //increases the curveRotation value to create a gradual rotating effect for the curves
   curveRotation = curveRotation + 0.03;
 }
 
 function drawRings2(){
+
+  //changes the color every 10 frames to create a smoother effect
   if (frameCount % 10 === 0){
     randomColorPicker = floor(random(colorPalette.length));
   }
+  //Sets the stroke weight and stroke color for the circle
   stroke(colorPalette[randomColorPicker]);
   strokeWeight(3);
   noFill();
   
+  //Draws the three circles used
   circle(windowWidth/2, windowHeight/2, circleThree.circleDiameterThree);
   circle(windowWidth/2, windowHeight/2, circleFour.circleDiameterFour);
   circle(windowWidth/2, windowHeight/2, circleFive.circleDiameterFive);
 
+  //increasing the diameter if the third circle repeatedly, creating a growing effect
   if (circleThree.circleDiameterThree <= windowHeight + 200){
     circleThree.circleDiameterThree = circleThree.circleDiameterThree + circleThree.radiusGrowthOne;
   }
@@ -325,6 +378,7 @@ function drawRings2(){
     circleThree.circleDiameterThree = 0;
   }
 
+  //increasing the diameter if the fourth circle repeatedly, creating a growing effect
   if (circleFour.circleDiameterFour <= windowHeight + 200){
     circleFour.circleDiameterFour = circleFour.circleDiameterFour + circleFour.radiusGrowthTwo;
   }
@@ -332,6 +386,7 @@ function drawRings2(){
     circleFour.circleDiameterFour = 0;
   }
 
+  //increasing the diameter if the fifth circle repeatedly, creating a growing effect
   if (circleFive.circleDiameterFive <= windowHeight + 200){
     circleFive.circleDiameterFive = circleFive.circleDiameterFive + circleFive.radiusGrowthThree;
   }
