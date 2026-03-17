@@ -6,6 +6,7 @@
 - [Images](images)
 - [Ball Array](ball-array)
 - [Generative Art](generative-art)
+- [Perlin Noise](perlin-noise)
 
 ## Assignments
  - [Interactive Scene](Interactive-Scene)

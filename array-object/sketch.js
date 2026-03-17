@@ -25,7 +25,12 @@ let circleFour = {
   radiusGrowthTwo: 15
 };
 
-let curveRotation = 0;
+let circleFive = {
+  circleDiameterFive: 0,
+  radiusGrowthThree: 15
+};
+
+let colorPalette = ["FF1900", "FF8800", "FFCC00", "FFFA00", "D8FF00","B6FF00", "00FF2E", "00FFA5", "00FFE1", "00DDFF", "057DF", "9800FF", "D400FF", "FF00E4", "FF008C"];
 
 let myButton = {
   x: 0,
@@ -34,18 +39,23 @@ let myButton = {
   h: 100,
 };
 
+let curveRotation = 0;
+
 let button1 = false;
 let button2 = false;
 
 let numberOfSegments = 40;
 let numberOfArms = 10;
 
+let colorGradient = 0;
+
 function setup() {
   createCanvas(windowWidth, windowHeight);
   
   circleOne.circleDiameterOne = windowHeight + 100;
   circleTwo.circleDiameterTwo = circleOne.circleDiameterOne - 25;
-  circleFour.circleDiameterFour = windowHeight/2
+  circleFour.circleDiameterFour = windowHeight/3;
+  circleFive.circleDiameterFive = windowHeight * 2/3;
 
   myButton.x = windowWidth/2;
   myButton.y = windowHeight/2 - 100;
@@ -58,7 +68,7 @@ function draw() {
 }
 
 function drawRing1() {
-  fill("#BC13FE");
+  fill(colorGradient);
   noStroke();
   circle(windowWidth/2, windowHeight/2, circleOne.circleDiameterOne);
   
@@ -78,6 +88,13 @@ function drawRing1() {
   else{
     circleTwo.circleDiameterTwo = circleOne.circleDiameterOne - 25;
   }
+
+  if (colorGradient === 255){
+    colorGradient = 0;
+  }
+  else{
+    colorGradient += 1;
+  }
 }
 
 function drawCurves1() {
@@ -85,17 +102,38 @@ function drawCurves1() {
   translate(windowWidth/2, windowHeight/2);
   rotate(curveRotation);
 
-  stroke("#00F7FF");
+  stroke(colorGradient);
   strokeWeight(5);
   noFill();
-  curve(0, windowHeight * -1, windowWidth/4 * -1, windowHeight/2 * -1, 0, 0, windowWidth/2, windowHeight/4 * -1);
-  curve(0, windowHeight * -1, windowWidth/4, windowHeight/2 * -1, 0, 0, windowWidth/2 * -1, windowHeight/4 * -1);
-  curve(0, windowHeight * 2, windowWidth/4, windowHeight/2, 0, 0, windowWidth/2 * -1, windowHeight/4);
-  curve(0, windowHeight * 2, windowWidth/4 * -1, windowHeight/2, 0, 0, windowWidth/2, windowHeight/4);
+  curve(0, windowHeight * -1, windowWidth/2 * -1, windowHeight/2 * -1, 0, 0, windowWidth/2, windowHeight/2 * -1);
+  curve(0, windowHeight * -1, windowWidth/2, windowHeight/2 * -1, 0, 0, windowWidth/2 * -1, windowHeight/2 * -1);
+  curve(0, windowHeight * 2, windowWidth/2, windowHeight/2, 0, 0, windowWidth/2 * -1, windowHeight/2);
+  curve(0, windowHeight * 2, windowWidth/2 * -1, windowHeight/2, 0, 0, windowWidth/2, windowHeight/2);
+
+  pop();
+
+  push();
+  translate(windowWidth/2, windowHeight/2);
+  rotate(-curveRotation);
+
+  stroke(colorGradient);
+  strokeWeight(5);
+  noFill();
+  curve(0, windowHeight * -1, windowWidth/2 * -1, windowHeight/2 * -1, 0, 0, windowWidth/2, windowHeight/2 * -1);
+  curve(0, windowHeight * -1, windowWidth/2, windowHeight/2 * -1, 0, 0, windowWidth/2 * -1, windowHeight/2 * -1);
+  curve(0, windowHeight * 2, windowWidth/2, windowHeight/2, 0, 0, windowWidth/2 * -1, windowHeight/2);
+  curve(0, windowHeight * 2, windowWidth/2 * -1, windowHeight/2, 0, 0, windowWidth/2, windowHeight/2);
 
   pop();
 
   curveRotation = curveRotation + 0.05;
+
+  if (colorGradient === 255){
+    colorGradient = 0;
+  }
+  else{
+    colorGradient += 1;
+  }
 }
 
 function createButtons(){
@@ -148,7 +186,7 @@ function mousePressed() {
     if (mouseX > 0 && mouseX < 50 && mouseY > 0 && mouseY < 20){
       if (button1){
         button1 = !button1;
-     }
+      }
       else if(button2){
         button2 = !button2;
       }
@@ -167,14 +205,14 @@ function drawCurves2(){
   noFill();
 
   for (let armCounter = 0; armCounter < numberOfArms; armCounter++){
-    let armAngle = (armCounter/numberOfArms) * TWO_PI;
+    let armAngle = armCounter/numberOfArms * TWO_PI;
 
     beginShape();
 
     for (let segmentCounter = 0; segmentCounter < numberOfSegments; segmentCounter++){
       let p = segmentCounter/numberOfSegments;
       let distanceFromCenter = 10 * pow(40, p * 1.1);
-      let theta = armAngle + (p * PI);
+      let theta = armAngle + p * PI;
 
       let x = distanceFromCenter * cos(theta);
       let y = distanceFromCenter * sin(theta);
@@ -196,14 +234,14 @@ function drawCurves2(){
   noFill();
 
   for (let armCounter = 0; armCounter < numberOfArms; armCounter++){
-    let armAngle = (armCounter/numberOfArms) * TWO_PI;
+    let armAngle = armCounter/numberOfArms * TWO_PI;
 
     beginShape();
 
     for (let segmentCounter = 0; segmentCounter < numberOfSegments; segmentCounter++){
-      let p = segmentCounter/numberOfSegments;
-      let distanceFromCenter = 10 * pow(40, p * 1.1);
-      let theta = armAngle + (p * PI);
+      let segmentProgress = segmentCounter/numberOfSegments;
+      let distanceFromCenter = 10 * pow(40, segmentProgress * 1.1);
+      let theta = armAngle + segmentProgress * PI;
 
       let x = distanceFromCenter * cos(theta);
       let y = distanceFromCenter * sin(theta);
@@ -215,7 +253,7 @@ function drawCurves2(){
 
   pop();
   
-  curveRotation = curveRotation + 0.03
+  curveRotation = curveRotation + 0.03;
 }
 
 function drawRings2(){
@@ -225,6 +263,7 @@ function drawRings2(){
   
   circle(windowWidth/2, windowHeight/2, circleThree.circleDiameterThree);
   circle(windowWidth/2, windowHeight/2, circleFour.circleDiameterFour);
+  circle(windowWidth/2, windowHeight/2, circleFive.circleDiameterFive);
 
   if (circleThree.circleDiameterThree <= windowHeight + 200){
     circleThree.circleDiameterThree = circleThree.circleDiameterThree + circleThree.radiusGrowthOne;
@@ -238,5 +277,12 @@ function drawRings2(){
   }
   else{
     circleFour.circleDiameterFour = 0;
+  }
+
+  if (circleFive.circleDiameterFive <= windowHeight + 200){
+    circleFive.circleDiameterFive = circleFive.circleDiameterFive + circleFive.radiusGrowthThree;
+  }
+  else{
+    circleFive.circleDiameterFive = 0;
   }
 }
