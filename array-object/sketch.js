@@ -3,8 +3,11 @@
 // March 18, 2026
 //
 // Extra for Experts:
-// - describe what you did to take this project "above and beyond"
+/* Used the translate function to move (0, 0) to the center of the screen and push and pop to limit the rotation 
+to the curves. I also used beginShape to make custom shapes with vertices.
+*/ 
 
+//Using object notations to contain properties of every circle used in both drawings
 let circleOne = {
   circleDiameterOne: 0,
   radiusDecayOne: 10
@@ -30,8 +33,7 @@ let circleFive = {
   radiusGrowthThree: 15
 };
 
-let colorPalette = ["FF1900", "FF8800", "FFCC00", "FFFA00", "D8FF00","B6FF00", "00FF2E", "00FFA5", "00FFE1", "00DDFF", "057DF", "9800FF", "D400FF", "FF00E4", "FF008C"];
-
+//Using object notation to contain properties for the buttons that are used to access drawings
 let myButton = {
   x: 0,
   y: 0,
@@ -39,24 +41,36 @@ let myButton = {
   h: 100,
 };
 
-let curveRotation = 0;
-
+//Sets button parameters to false
 let button1 = false;
 let button2 = false;
 
-let numberOfSegments = 40;
-let numberOfArms = 10;
-
+//Sets the variable used to control the color for the first drawing
 let colorGradient = 0;
+
+//Sets the array that contains the colors for the second drawing
+let colorPalette = ["#FF1900", "#FF8800", "#FFCC00", "#FFFA00", "#D8FF00","#B6FF00", "#00FF2E", "#00FFA5", "#00FFE1", "#00DDFF", "#057DFF", "#9800FF", "#D400FF", "#FF00E4", "#FF008C"];
+//Sets the variable that randomly picks from the colorPalette array
+let randomColorPicker = 0;
+
+//Sets the variable that is used to rotate the curves in both drawings
+let curveRotation = 0;
+
+//Sets how many vertices each curve in the second drawing is made up of
+let numberOfSegments = 40;
+//Sets the variables that controls how many curves are in the second drawing
+let numberOfArms = 10;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   
+  //Updates the diameter for many circles after windowHeight is established
   circleOne.circleDiameterOne = windowHeight + 100;
   circleTwo.circleDiameterTwo = circleOne.circleDiameterOne - 25;
   circleFour.circleDiameterFour = windowHeight/3;
   circleFive.circleDiameterFive = windowHeight * 2/3;
 
+  //Updates the button parameters after windowWidth is established
   myButton.x = windowWidth/2;
   myButton.y = windowHeight/2 - 100;
 
@@ -64,17 +78,28 @@ function setup() {
 
 function draw() {
   background(0);
+  //creates the buttons and runs the drawings 
   createButtons();
 }
 
 function drawRing1() {
-  fill(colorGradient);
+  //push and pop used to only apply the colorMode change to the first circle
+  push()
+  //changes the color mode
+  colorMode(HSB, 255);
+  //fills the circle based on colorGradient
+  fill(colorGradient, 255, 255);
+  pop()
+
+  //draws the first circle
   noStroke();
   circle(windowWidth/2, windowHeight/2, circleOne.circleDiameterOne);
   
+  //draws the second circle, filling it black to create the look of a ring
   fill("black");
   circle(windowWidth/2, windowHeight/2, circleTwo.circleDiameterTwo);
 
+  //decreasing the diameter if the first circle repeatedly, creating a shrinking effect
   if (circleOne.circleDiameterOne >= 0){
     circleOne.circleDiameterOne = circleOne.circleDiameterOne - circleOne.radiusDecayOne;
   }
@@ -82,6 +107,7 @@ function drawRing1() {
     circleOne.circleDiameterOne = windowHeight + 100;
   }
 
+  //decreasing the diameter of the second circle repeatedly, creating a shrinking effect
   if (circleTwo.circleDiameterTwo >= 0){
     circleTwo.circleDiameterTwo = circleTwo.circleDiameterTwo - circleTwo.radiusDecayTwo;
   }
@@ -89,6 +115,7 @@ function drawRing1() {
     circleTwo.circleDiameterTwo = circleOne.circleDiameterOne - 25;
   }
 
+  //changes the color of the ring in a rainbow gradient repeatedly
   if (colorGradient === 255){
     colorGradient = 0;
   }
@@ -98,11 +125,18 @@ function drawRing1() {
 }
 
 function drawCurves1() {
+  //uses push and pop to limit the rotation to the curves
   push();
+  //moves (0, 0) to the center of the screen
   translate(windowWidth/2, windowHeight/2);
+  //rotates the coordinate system around (0, 0)
   rotate(curveRotation);
 
-  stroke(colorGradient);
+  //changes the color mode and draws the curve with a color based on colorGradient
+  colorMode(HSB, 255);
+  stroke(colorGradient, 255, 255);
+  
+  //draws four curves
   strokeWeight(5);
   noFill();
   curve(0, windowHeight * -1, windowWidth/2 * -1, windowHeight/2 * -1, 0, 0, windowWidth/2, windowHeight/2 * -1);
@@ -112,11 +146,18 @@ function drawCurves1() {
 
   pop();
 
+  //uses push and pop to limit the rotation to the curves
   push();
+  //moves(0, 0) to the center of the screen
   translate(windowWidth/2, windowHeight/2);
+  //rotates the coordinate system around (0, 0) the other way compared to earlier in the function
   rotate(-curveRotation);
 
-  stroke(colorGradient);
+  //changes the color mode and draws the curve with a color based on colorGradient
+  colorMode(HSB, 255);
+  stroke(colorGradient, 255, 255);
+  
+  //draws another four curves
   strokeWeight(5);
   noFill();
   curve(0, windowHeight * -1, windowWidth/2 * -1, windowHeight/2 * -1, 0, 0, windowWidth/2, windowHeight/2 * -1);
@@ -126,8 +167,11 @@ function drawCurves1() {
 
   pop();
 
-  curveRotation = curveRotation + 0.05;
+  //increases the curveRotation value to create a gradual rotating effect for the curves
+  curveRotation += 0.05;
 
+
+  //changes the color of the curves in a rainbow gradient repeatedly
   if (colorGradient === 255){
     colorGradient = 0;
   }
@@ -200,7 +244,10 @@ function drawCurves2(){
   translate(windowWidth/2, windowHeight/2);
   rotate(curveRotation);
 
-  stroke("#FF5F1F");
+  if (frameCount % 10 === 0){
+    randomColorPicker = floor(random(colorPalette.length));
+  }
+  stroke(colorPalette[randomColorPicker]);
   strokeWeight(1);
   noFill();
 
@@ -229,7 +276,10 @@ function drawCurves2(){
   translate(windowWidth/2, windowHeight/2);
   rotate(-curveRotation);
 
-  stroke("#39FF14");
+  if (frameCount % 10 === 0){
+    randomColorPicker = floor(random(colorPalette.length));
+  }
+  stroke(colorPalette[randomColorPicker]);
   strokeWeight(1);
   noFill();
 
@@ -257,7 +307,10 @@ function drawCurves2(){
 }
 
 function drawRings2(){
-  stroke("#FF69B4");
+  if (frameCount % 10 === 0){
+    randomColorPicker = floor(random(colorPalette.length));
+  }
+  stroke(colorPalette[randomColorPicker]);
   strokeWeight(3);
   noFill();
   
