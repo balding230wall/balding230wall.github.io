@@ -15,6 +15,16 @@ let circleTwo = {
   radiusDecayTwo: 10
 };
 
+let circleThree = {
+  circleDiameterThree: 0,
+  radiusGrowthOne: 15
+};
+
+let circleFour = {
+  circleDiameterFour: 0,
+  radiusGrowthTwo: 15
+};
+
 let curveRotation = 0;
 
 let myButton = {
@@ -27,11 +37,15 @@ let myButton = {
 let button1 = false;
 let button2 = false;
 
+let numberOfSegments = 40;
+let numberOfArms = 10;
+
 function setup() {
   createCanvas(windowWidth, windowHeight);
   
   circleOne.circleDiameterOne = windowHeight + 100;
   circleTwo.circleDiameterTwo = circleOne.circleDiameterOne - 25;
+  circleFour.circleDiameterFour = windowHeight/2
 
   myButton.x = windowWidth/2;
   myButton.y = windowHeight/2 - 100;
@@ -43,7 +57,7 @@ function draw() {
   createButtons();
 }
 
-function animateRing1() {
+function drawRing1() {
   fill("#BC13FE");
   noStroke();
   circle(windowWidth/2, windowHeight/2, circleOne.circleDiameterOne);
@@ -66,7 +80,7 @@ function animateRing1() {
   }
 }
 
-function animateCurve1() {
+function drawCurves1() {
   push();
   translate(windowWidth/2, windowHeight/2);
   rotate(curveRotation);
@@ -74,10 +88,10 @@ function animateCurve1() {
   stroke("#00F7FF");
   strokeWeight(5);
   noFill();
-  curve(0, windowHeight * -1, windowWidth/2 * -1, windowHeight/2 * -1, 0, 0, windowWidth/2, windowHeight/4 * -1);
-  curve(0, windowHeight * -1, windowWidth/2, windowHeight/2 * -1, 0, 0, windowWidth/2 * -1, windowHeight/4 * -1);
-  curve(0, windowHeight * 2, windowWidth/2, windowHeight/2, 0, 0, windowWidth/2 * -1, windowHeight/4);
-  curve(0, windowHeight * 2, windowWidth/2 * -1, windowHeight/2, 0, 0, windowWidth/2, windowHeight/4);
+  curve(0, windowHeight * -1, windowWidth/4 * -1, windowHeight/2 * -1, 0, 0, windowWidth/2, windowHeight/4 * -1);
+  curve(0, windowHeight * -1, windowWidth/4, windowHeight/2 * -1, 0, 0, windowWidth/2 * -1, windowHeight/4 * -1);
+  curve(0, windowHeight * 2, windowWidth/4, windowHeight/2, 0, 0, windowWidth/2 * -1, windowHeight/4);
+  curve(0, windowHeight * 2, windowWidth/4 * -1, windowHeight/2, 0, 0, windowWidth/2, windowHeight/4);
 
   pop();
 
@@ -86,12 +100,13 @@ function animateCurve1() {
 
 function createButtons(){
   if (button1){
-    animateRing1();
-    animateCurve1();
+    drawRing1();
+    drawCurves1();
   }
   
   if (button2){
-    console.log("Hi");
+    drawRings2();
+    drawCurves2();
   }
  
   if (!button1 && !button2){
@@ -101,16 +116,19 @@ function createButtons(){
 
     fill(0);
     textSize(20);
+    stroke("white");
     text("Cool Animation", myButton.x - 400, myButton.y + myButton.h/2);
     text("Cooler Animation", myButton.x + 250, myButton.y + myButton.h/2);
   }
 
   if (button1 || button2){
+    noStroke();
     fill(255);
     rect(0, 0, 50, 20);
 
     textSize(10);
     fill(0);
+    stroke("white");
     text("Return", 0, 10);
   }
 }
@@ -138,3 +156,87 @@ function mousePressed() {
   }
 }
 
+function drawCurves2(){
+  push();
+
+  translate(windowWidth/2, windowHeight/2);
+  rotate(curveRotation);
+
+  stroke("#FF5F1F");
+  strokeWeight(1);
+  noFill();
+
+  for (let armCounter = 0; armCounter < numberOfArms; armCounter++){
+    let armAngle = (armCounter/numberOfArms) * TWO_PI;
+
+    beginShape();
+
+    for (let segmentCounter = 0; segmentCounter < numberOfSegments; segmentCounter++){
+      let p = segmentCounter/numberOfSegments;
+      let distanceFromCenter = 10 * pow(40, p * 1.1);
+      let theta = armAngle + (p * PI);
+
+      let x = distanceFromCenter * cos(theta);
+      let y = distanceFromCenter * sin(theta);
+
+      vertex(x, y);
+    }
+    endShape();
+  }
+
+  pop();
+
+  push();
+
+  translate(windowWidth/2, windowHeight/2);
+  rotate(-curveRotation);
+
+  stroke("#39FF14");
+  strokeWeight(1);
+  noFill();
+
+  for (let armCounter = 0; armCounter < numberOfArms; armCounter++){
+    let armAngle = (armCounter/numberOfArms) * TWO_PI;
+
+    beginShape();
+
+    for (let segmentCounter = 0; segmentCounter < numberOfSegments; segmentCounter++){
+      let p = segmentCounter/numberOfSegments;
+      let distanceFromCenter = 10 * pow(40, p * 1.1);
+      let theta = armAngle + (p * PI);
+
+      let x = distanceFromCenter * cos(theta);
+      let y = distanceFromCenter * sin(theta);
+
+      vertex(x, y);
+    }
+    endShape();
+  }
+
+  pop();
+  
+  curveRotation = curveRotation + 0.03
+}
+
+function drawRings2(){
+  stroke("#FF69B4");
+  strokeWeight(3);
+  noFill();
+  
+  circle(windowWidth/2, windowHeight/2, circleThree.circleDiameterThree);
+  circle(windowWidth/2, windowHeight/2, circleFour.circleDiameterFour);
+
+  if (circleThree.circleDiameterThree <= windowHeight + 200){
+    circleThree.circleDiameterThree = circleThree.circleDiameterThree + circleThree.radiusGrowthOne;
+  }
+  else{
+    circleThree.circleDiameterThree = 0;
+  }
+
+  if (circleFour.circleDiameterFour <= windowHeight + 200){
+    circleFour.circleDiameterFour = circleFour.circleDiameterFour + circleFour.radiusGrowthTwo;
+  }
+  else{
+    circleFour.circleDiameterFour = 0;
+  }
+}
