@@ -15,3 +15,4 @@
 ## Assignments
  - [Interactive Scene](Interactive-Scene)
  - [Array and Object Notation](array-object)
+ - [2D Grid Assignment](grid-based-project)
