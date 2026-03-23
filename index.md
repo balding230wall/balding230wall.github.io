@@ -9,6 +9,7 @@
 - [Perlin Noise](perlin-noise)
 - [2D Grid](2d-grid)
 - [Rectangular Grid](rectangular-grid)
+- [Game of Life](life)
 
 
 ## Assignments
