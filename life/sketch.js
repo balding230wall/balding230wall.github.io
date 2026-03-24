@@ -7,10 +7,17 @@
 
 const CELL_SIZE = 20;
 const RENDER_ON_FRAME = 1;
+const LIVE_CELL = 1;
+const DEAD_CELL = 0;
 let autoPlayIsOn = true;
 let grid;
 let rows;
 let columns;
+let gosper;
+
+function preload(){
+  gosper = loadJSON("gosper.json");
+}
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -30,10 +37,10 @@ function draw() {
 function displayGrid(){
   for (let i = 0; i < rows; i++){
     for (let j = 0; j < columns; j++){
-      if (grid[i][j] === 0){
+      if (grid[i][j] === DEAD_CELL){
         fill("white");
       }
-      else if (grid[i][j] === 1){
+      else if (grid[i][j] === LIVE_CELL){
         fill("black");
       }
       square(j * CELL_SIZE, i * CELL_SIZE, CELL_SIZE);
@@ -50,11 +57,11 @@ function mouseClicked(){
 
 function toggleCell(j, i){
   if (j >= 0 && j < columns && i >= 0 && i < rows){
-    if (grid[i][j] === 0){
-      grid[i][j] = 1;
+    if (grid[i][j] === DEAD_CELL){
+      grid[i][j] = LIVE_CELL;
     }
-    else if (grid[i][j] === 1){
-      grid[i][j] = 0;
+    else if (grid[i][j] === LIVE_CELL){
+      grid[i][j] = DEAD_CELL;
     }
   }
 }
@@ -75,6 +82,9 @@ function keyPressed(){
   if (key === " "){
     grid = updateGrid();
   }
+  if ( key === "g"){
+    grid = gosper;
+  }
 }
 
 function generateEmptyGrid(){
@@ -82,7 +92,7 @@ function generateEmptyGrid(){
   for (let i = 0; i < rows; i++){
     newGrid.push([]);
     for (let j = 0; j< columns; j++){
-      newGrid[i].push(0);
+      newGrid[i].push(DEAD_CELL);
     }
   }
   return newGrid;
@@ -96,10 +106,10 @@ function generateRandomGrid(){
     newGrid.push([]);
     for (let j = 0; j< columns; j++){
       if (random(100) < 50){
-        newGrid[i].push(0);
+        newGrid[i].push(DEAD_CELL);
       } 
       else{
-        newGrid[i].push(1);
+        newGrid[i].push(LIVE_CELL);
       }
     }
   }
@@ -123,21 +133,21 @@ function updateGrid(){
 
       neighbors -= grid[i][j];
 
-      if (grid[i][j] === 1){
+      if (grid[i][j] === LIVE_CELL){
         if (neighbors === 2 || neighbors === 3){
-          nextTurn[i][j] = 1;
+          nextTurn[i][j] = LIVE_CELL;
         }
         else{
-          nextTurn[i][j] = 0;
+          nextTurn[i][j] = DEAD_CELL;
         }
       }
       
-      if (grid[i][j] === 0){
+      if (grid[i][j] === DEAD_CELL){
         if (neighbors === 3){
-          nextTurn[i][j] = 1;
+          nextTurn[i][j] = LIVE_CELL;
         }
         else{
-          nextTurn[i][j] = 0;
+          nextTurn[i][j] = DEAD_CELL;
         }
       }
     }
