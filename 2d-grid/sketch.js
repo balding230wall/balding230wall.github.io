@@ -13,7 +13,7 @@
 // const SQUARE_DIMENSIONS = grid.length;
 
 let grid;
-const SQUARE_DIMENSION = 10;
+const SQUARE_DIMENSIONS = 10;
 
 let cellSize;
 
