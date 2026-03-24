@@ -8,10 +8,14 @@
 let board = [];
 
 let gridSize;
-let cols = 8;
-let rows = 8;
-let white = 0;
-let black = 1;
+const COLS = 8;
+const ROWS = 8;
+const WHITE_BOARD = 0;
+const BROWN_BOARD = 1;
+const RED_PIECE = 2;
+const BLACK_PIECE = 3;
+const RED_KING = 4;
+const BLACK_KING = 5;
 
 
 function setup() {
@@ -24,26 +28,27 @@ function setup() {
     gridSize = windowWidth/8;
   }
   
-  for (let r = 0; r < rows; r++) {
+  for (let r = 0; r < ROWS; r++) {
     board[r] = [];
-    for (let c = 0; cols < 8; c++) {
-      if (r % 2 === 0){
-        if (c % 2 === 0){
-          board[r][c] = white;
-        }
-        else{
-          board[r][c] = black;
-        }
-
+    for (let c = 0; c < COLS; c++) {
+      if ((r + c) % 2 === 0){
+        board[r][c] = WHITE_BOARD;
       }
       else{
-        if (c % 2 === 0){
-          board[r][c] = black;
-        }
-        else{
-          board[r][c] = white;
-        }
+        board[r][c] = BROWN_BOARD;
+      }
+    }
+  }
 
+ for (let r = 0; r < ROWS; r++) {
+    pieces[r] = [];
+    for (let c = 0; c < COLS; c++) {
+      if ((r + c) % 2 === 1){
+        if (r <= 2){
+        
+      }
+      else{
+        board[r][c] = BROWN_BOARD;
       }
     }
   }
@@ -53,18 +58,36 @@ function setup() {
 function draw() {
   background(220);
   drawBoard();
+  drawPieces();
 }
 
 function drawBoard(){
-  for (let r = 0; r < rows; r++) {
-    for (let c = 0; cols < 8; c++) {
-      if (board[r][c] === white){
-        fill(255);
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      if (board[r][c] === WHITE_BOARD){
+        fill("255");
         square(gridSize * c, gridSize * r, gridSize);
       }
       else{
-        fill(0);
+        fill("#A67C52");
         square(gridSize * c, gridSize * r, gridSize);
+      }
+    }
+  }
+}
+
+function drawPieces(){
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      if ((r + c) % 2 === 1){
+        if (r <= 2){
+          fill("#8B0000");
+          circle(gridSize * (c + 1/2), gridSize * (r + 1/2), gridSize * 0.8);
+        }
+        if (r >= 5){
+          fill("black");
+          circle(gridSize * (c + 1/2), gridSize * (r + 1/2), gridSize * 0.8);
+        }
       }
     }
   }
