@@ -6,6 +6,7 @@
 // - describe what you did to take this project "above and beyond"
 
 let board = [];
+let pieces = [];
 
 let gridSize;
 const COLS = 8;
