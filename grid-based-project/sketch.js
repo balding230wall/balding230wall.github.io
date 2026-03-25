@@ -20,6 +20,7 @@ const BROWN_BOARD = 6;
 const EMPTY = 0;
 
 
+
 function setup() {
   createCanvas(windowWidth, windowHeight);
   
@@ -83,17 +84,26 @@ function drawBoard(){
 function drawPieces(){
   for (let r = 0; r < ROWS; r++) {
     for (let c = 0; c < COLS; c++) {
-      
-      let piece = pieces[r][c];
 
-      if (piece === RED_PIECE){
+      if (pieces[r][c] === RED_PIECE){
         fill("#8B0000");
         circle(gridSize * (c + 0.5), gridSize * (r + 0.5), gridSize * 0.8);
       }
-      else if (piece === BLACK_PIECE){
+      else if (pieces[r][c] === BLACK_PIECE){
         fill("black");
         circle(gridSize * (c + 0.5), gridSize * (r + 0.5), gridSize * 0.8);
       }
     }
+  }
+}
+
+
+function mouseClicked(){
+  let c = Math.floor(mouseX/gridSize);
+  let r = Math.floor(mouseY/gridSize);
+
+  let selection = null;
+
+  if (board[r][c] === RED_PIECE || board [r][c] === BLACK_PIECE){
   }
 }
