@@ -11,12 +11,11 @@ let pieces = [];
 let gridSize;
 const COLS = 8;
 const ROWS = 8;
-const WHITE_BOARD = 0;
-const BROWN_BOARD = 1;
-const RED_PIECE = 2;
-const BLACK_PIECE = 3;
-const RED_KING = 4;
-const BLACK_KING = 5;
+const RED_PIECE = 1;
+const BLACK_PIECE = 2;
+const RED_KING = 3;
+const BLACK_KING = 4;
+const EMPTY = 0;
 
 
 function setup() {
@@ -45,11 +44,13 @@ function setup() {
     pieces[r] = [];
     for (let c = 0; c < COLS; c++) {
       if ((r + c) % 2 === 1){
+        pieces[r][c] = EMPTY;
         if (r <= 2){
-        
-      }
-      else{
-        board[r][c] = BROWN_BOARD;
+          pieces[r][c] = RED_PIECE;
+        }
+        else if ( r >= 5){
+          pieces [r][c] = BLACK_PIECE;
+        }
       }
     }
   }
@@ -66,7 +67,7 @@ function drawBoard(){
   for (let r = 0; r < ROWS; r++) {
     for (let c = 0; c < COLS; c++) {
       if (board[r][c] === WHITE_BOARD){
-        fill("255");
+        fill(255);
         square(gridSize * c, gridSize * r, gridSize);
       }
       else{
@@ -80,15 +81,16 @@ function drawBoard(){
 function drawPieces(){
   for (let r = 0; r < ROWS; r++) {
     for (let c = 0; c < COLS; c++) {
-      if ((r + c) % 2 === 1){
-        if (r <= 2){
-          fill("#8B0000");
-          circle(gridSize * (c + 1/2), gridSize * (r + 1/2), gridSize * 0.8);
-        }
-        if (r >= 5){
-          fill("black");
-          circle(gridSize * (c + 1/2), gridSize * (r + 1/2), gridSize * 0.8);
-        }
+      
+      let piece = pieces[r][c];
+
+      if (piece === RED_PIECE){
+        fill("#8B0000");
+        circle(gridSize * (c + 0.5), gridSize * (r + 0.5), gridSize * 0.8);
+      }
+      else if (piece === BLACK_PIECE){
+        fill("black");
+        circle(gridSize * (c + 0.5), gridSize * (r + 0.5), gridSize * 0.8);
       }
     }
   }
