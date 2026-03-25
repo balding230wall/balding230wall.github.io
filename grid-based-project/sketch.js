@@ -19,6 +19,7 @@ const WHITE_BOARD = 5;
 const BROWN_BOARD = 6;
 const EMPTY = 0;
 
+let selection = null;
 
 
 function setup() {
@@ -101,9 +102,25 @@ function drawPieces(){
 function mouseClicked(){
   let c = Math.floor(mouseX/gridSize);
   let r = Math.floor(mouseY/gridSize);
-
-  let selection = null;
-
-  if (board[r][c] === RED_PIECE || board [r][c] === BLACK_PIECE){
+  
+  if (selection === null){
+    if (pieces[r][c] === RED_PIECE || pieces[r][c] === BLACK_PIECE){
+      selection = {
+      row: r,
+      column: c
+      };
+    }
+  }
+  else{
+    if (pieces[selection.row][selection.column] === BLACK_PIECE && r === selection.row - 1 && (c === selection.column + 1 || c === selection.column - 1) && pieces[r][c] === EMPTY){
+      pieces[r][c] = pieces[selection.row][selection.column];
+      pieces[selection.row][selection.column] = EMPTY;
+    }
+    else if (pieces[selection.row][selection.column] === RED_PIECE && r === selection.row + 1 && (c === selection.column + 1 || c === selection.column - 1) && pieces[r][c] == EMPTY){
+      pieces[r][c] = pieces[selection.row][selection.column];
+      pieces[selection.row][selection.column] = EMPTY;
+    }
+    selection = null;
   }
 }
+
