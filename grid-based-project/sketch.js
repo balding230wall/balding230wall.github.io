@@ -15,6 +15,8 @@ const RED_PIECE = 1;
 const BLACK_PIECE = 2;
 const RED_KING = 3;
 const BLACK_KING = 4;
+const WHITE_BOARD = 5;
+const BROWN_BOARD = 6;
 const EMPTY = 0;
 
 
@@ -40,7 +42,7 @@ function setup() {
     }
   }
 
- for (let r = 0; r < ROWS; r++) {
+  for (let r = 0; r < ROWS; r++) {
     pieces[r] = [];
     for (let c = 0; c < COLS; c++) {
       if ((r + c) % 2 === 1){

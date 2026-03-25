@@ -10,6 +10,7 @@
 - [2D Grid](2d-grid)
 - [Rectangular Grid](rectangular-grid)
 - [Game of Life](life)
+- [Character in Grid](character-in-grid)
 
 
 ## Assignments
