@@ -66,6 +66,7 @@ function draw() {
   background(220);
   drawBoard();
   drawPieces();
+  promotion();
 }
 
 function drawBoard(){
@@ -95,6 +96,20 @@ function drawPieces(){
         fill("black");
         circle(gridSize * (c + 0.5), gridSize * (r + 0.5), gridSize * 0.8);
       }
+
+      push();
+
+      if (pieces[r][c] === RED_KING){
+        colorMode(HSB, 255);
+        fill(0, 80, 100);
+        circle(gridSize * (c + 0.5), gridSize * (r + 0.5), gridSize * 0.8);
+      }
+      else if (pieces[r][c] === BLACK_KING){
+        fill(220, 30, 10);
+        circle(gridSize * (c + 0.5), gridSize * (r + 0.5), gridSize * 0.8);
+      }
+
+      pop();
     }
   }
 }
@@ -111,21 +126,23 @@ function mouseClicked(){
   let moved = false;
   
   if (selection === null){
-    if ((turn === true && pieces[r][c] === BLACK_PIECE) || (turn === false && pieces[r][c] === RED_PIECE)){
+    if (turn === true && pieces[r][c] === BLACK_PIECE || turn === false && pieces[r][c] === RED_PIECE){
       selection = {
-      row: r,
-      column: c
+        row: r,
+        column: c
       };
     }
     return;
   }
-  if ((turn === true && pieces[r][c] === BLACK_PIECE) || (turn === false && pieces[r][c] === RED_PIECE)){
-      selection = {
+  if (turn === true && pieces[r][c] === BLACK_PIECE || turn === false && pieces[r][c] === RED_PIECE){
+    selection = {
       row: r,
       column: c
-      };
+    };
     return;
   }
+
+
   if (turn === true && pieces[selection.row][selection.column] === BLACK_PIECE && r === selection.row - 1 && (c === selection.column + 1 || c === selection.column - 1) && pieces[r][c] === EMPTY){
     pieces[r][c] = pieces[selection.row][selection.column];
     pieces[selection.row][selection.column] = EMPTY;
@@ -158,9 +175,57 @@ function mouseClicked(){
     pieces[selection.row][selection.column] = EMPTY;
     moved = true;
   }
+
+
+  else if (turn === true && pieces[selection.row][selection.column] === BLACK_KING && pieces[r][c] === EMPTY && (r === selection.row + 1 || r === selection.row - 1) && (c === selection.column + 1 || c === selection.column - 1)){
+    pieces[r][c] = pieces[selection.row][selection.column];
+    pieces[selection.row][selection.column] = EMPTY;
+    moved = true;
+  }
+  else if (turn === false && pieces[selection.row][selection.column] === RED_KING && pieces[r][c] === EMPTY && (r === selection.row + 1 || r === selection.row - 1) && (c === selection.column + 1 || c === selection.column - 1)){
+    pieces[r][c] = pieces[selection.row][selection.column];
+    pieces[selection.row][selection.column] = EMPTY;
+    moved = true;
+  }
+  else if (turn === true && pieces[selection.row][selection.column] === BLACK_KING && (r === selection.row - 2 && c === selection.column + 2 && (pieces[selection.row - 1][selection.column + 1] === RED_PIECE || pieces[selection.row - 1][selection.column + 1] === RED_KING) && pieces[selection.row - 2][selection.column + 2] === EMPTY || 
+  r === selection.row + 2 && c === selection.column + 2 && (pieces[selection.row + 1][selection.column + 1] === RED_PIECE || pieces[selection.row + 1][selection.column + 1] === RED_KING) && pieces[selection.row + 2][selection.column + 2] === EMPTY ||
+  r === selection.row - 2 && c === selection.column - 2 && (pieces[selection.row - 1][selection.column - 1] === RED_PIECE || pieces[selection.row - 1][selection.column - 1] === RED_KING) && pieces[selection.row - 2][selection.column - 2] === EMPTY ||
+  r === selection.row + 2 && c === selection.column + 2 && (pieces[selection.row + 1][selection.column + 1] === RED_PIECE || pieces[selection.row + 1][selection.column + 1] === RED_KING) && pieces[selection.row + 2][selection.column + 2] === EMPTY)){
+    
+    if (r === selection.row + 2 && c === selection.column - 2){
+      pieces[selection.row + 1][selection.column - 1] = EMPTY;
+    }
+    else if (r === selection.row + 2 && c === selection.column + 2){
+      pieces[selection.row + 1][selection.column + 1] = EMPTY;
+    }
+    else if (r === selection.row - 2 && c === selection.column + 2){
+      pieces[selection.row - 1][selection.column + 1] = EMPTY;
+    }
+    else if (r === selection.row - 2 && c === selection.column - 2){
+      pieces[selection.row - 1][selection.column - 1] = EMPTY;
+    }
+
+    pieces[r][c] = pieces[selection.row][selection.column];
+    pieces[selection.row][selection.column] = EMPTY;
+    moved = true;
+  }
+
+
   if (moved){
     selection = null;
     turn = !turn;
   }
 }
 
+function promotion(){
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      if (pieces[r][c] === BLACK_PIECE && pieces[r] === 0) {
+        pieces[r][c] === BLACK_KING;
+      }
+      else if (pieces[r][c] === RED_PIECE && pieces[r] === 7){
+        pieces[r][c] === RED_KING;
+      }
+    }
+  }
+}
