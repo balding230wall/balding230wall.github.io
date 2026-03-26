@@ -1,5 +1,5 @@
-// Project Title
-// Your Name
+// Checkers
+// Chuyan Wang
 // Date
 //
 // Extra for Experts:
@@ -21,6 +21,7 @@ const EMPTY = 0;
 
 let selection = null;
 let turn = true;
+let glow = 0;
 
 
 function setup() {
@@ -48,8 +49,8 @@ function setup() {
   for (let r = 0; r < ROWS; r++) {
     pieces[r] = [];
     for (let c = 0; c < COLS; c++) {
+      pieces[r][c] = EMPTY;
       if ((r + c) % 2 === 1){
-        pieces[r][c] = EMPTY;
         if (r <= 2){
           pieces[r][c] = RED_PIECE;
         }
@@ -67,6 +68,7 @@ function draw() {
   drawBoard();
   drawPieces();
   promotion();
+  glow += 0.08;
 }
 
 function drawBoard(){
@@ -88,6 +90,18 @@ function drawPieces(){
   for (let r = 0; r < ROWS; r++) {
     for (let c = 0; c < COLS; c++) {
 
+      if (selection !== null && selection.row === r && selection.column === c){
+        push();
+
+        noFill();
+        stroke("yellow");
+        strokeWeight(3);
+      
+        circle(gridSize * (c + 0.5), gridSize * (r + 0.5), gridSize * 0.8);
+
+        pop();
+      }
+
       if (pieces[r][c] === RED_PIECE){
         fill("#8B0000");
         circle(gridSize * (c + 0.5), gridSize * (r + 0.5), gridSize * 0.8);
@@ -98,15 +112,25 @@ function drawPieces(){
       }
 
       push();
+      colorMode(HSB, 360, 100, 100, 100);
+
+      let glowPulse = sin(glow);
 
       if (pieces[r][c] === RED_KING){
-        colorMode(HSB, 255);
-        fill(0, 80, 100);
-        circle(gridSize * (c + 0.5), gridSize * (r + 0.5), gridSize * 0.8);
+        
+        let brightness = 85 + glowPulse * 15;
+        let changingSize = gridSize * (0.8 + glowPulse * 0.05);
+
+        fill(0, 100, brightness);
+        circle(gridSize * (c + 0.5), gridSize * (r + 0.5), changingSize)
       }
       else if (pieces[r][c] === BLACK_KING){
-        fill(220, 30, 10);
-        circle(gridSize * (c + 0.5), gridSize * (r + 0.5), gridSize * 0.8);
+        
+        let brightness = 10 + glowPulse * 8;
+        let changingSize = gridSize * (0.8 + glowPulse * 0.05);
+        
+        fill(0, 0, brightness);
+        circle(gridSize * (c + 0.5), gridSize * (r + 0.5), changingSize);
       }
 
       pop();
@@ -126,7 +150,7 @@ function mouseClicked(){
   let moved = false;
   
   if (selection === null){
-    if (turn === true && pieces[r][c] === BLACK_PIECE || turn === false && pieces[r][c] === RED_PIECE){
+    if ((turn === true && (pieces[r][c] === BLACK_PIECE || pieces[r][c] === BLACK_KING)) || (turn === false && (pieces[r][c] === RED_PIECE || pieces[r][c] === RED_KING))){
       selection = {
         row: r,
         column: c
@@ -134,7 +158,7 @@ function mouseClicked(){
     }
     return;
   }
-  if (turn === true && pieces[r][c] === BLACK_PIECE || turn === false && pieces[r][c] === RED_PIECE){
+  if ((turn === true && (pieces[r][c] === BLACK_PIECE || pieces[r][c] === BLACK_KING)) || (turn === false && (pieces[r][c] === RED_PIECE || pieces[r][c] === RED_KING))){
     selection = {
       row: r,
       column: c
@@ -190,8 +214,31 @@ function mouseClicked(){
   else if (turn === true && pieces[selection.row][selection.column] === BLACK_KING && (r === selection.row - 2 && c === selection.column + 2 && (pieces[selection.row - 1][selection.column + 1] === RED_PIECE || pieces[selection.row - 1][selection.column + 1] === RED_KING) && pieces[selection.row - 2][selection.column + 2] === EMPTY || 
   r === selection.row + 2 && c === selection.column + 2 && (pieces[selection.row + 1][selection.column + 1] === RED_PIECE || pieces[selection.row + 1][selection.column + 1] === RED_KING) && pieces[selection.row + 2][selection.column + 2] === EMPTY ||
   r === selection.row - 2 && c === selection.column - 2 && (pieces[selection.row - 1][selection.column - 1] === RED_PIECE || pieces[selection.row - 1][selection.column - 1] === RED_KING) && pieces[selection.row - 2][selection.column - 2] === EMPTY ||
-  r === selection.row + 2 && c === selection.column + 2 && (pieces[selection.row + 1][selection.column + 1] === RED_PIECE || pieces[selection.row + 1][selection.column + 1] === RED_KING) && pieces[selection.row + 2][selection.column + 2] === EMPTY)){
+  r === selection.row + 2 && c === selection.column - 2 && (pieces[selection.row + 1][selection.column - 1] === RED_PIECE || pieces[selection.row + 1][selection.column - 1] === RED_KING) && pieces[selection.row + 2][selection.column - 2] === EMPTY)){
     
+    if (r === selection.row + 2 && c === selection.column - 2){
+      pieces[selection.row + 1][selection.column - 1] = EMPTY;
+    }
+    else if (r === selection.row + 2 && c === selection.column + 2){
+      pieces[selection.row + 1][selection.column + 1] = EMPTY;
+    }
+    else if (r === selection.row - 2 && c === selection.column + 2){
+      pieces[selection.row - 1][selection.column + 1] = EMPTY;
+    }
+    else if (r === selection.row - 2 && c === selection.column - 2){
+      pieces[selection.row - 1][selection.column - 1] = EMPTY;
+    }
+
+    pieces[r][c] = pieces[selection.row][selection.column];
+    pieces[selection.row][selection.column] = EMPTY;
+    moved = true;
+  }
+
+  else if (turn === false && pieces[selection.row][selection.column] === RED_KING && (r === selection.row - 2 && c === selection.column + 2 && (pieces[selection.row - 1][selection.column + 1] === BLACK_PIECE || pieces[selection.row - 1][selection.column + 1] === BLACK_KING) && pieces[selection.row - 2][selection.column + 2] === EMPTY || 
+  r === selection.row + 2 && c === selection.column + 2 && (pieces[selection.row + 1][selection.column + 1] === BLACK_PIECE || pieces[selection.row + 1][selection.column + 1] === BLACK_KING) && pieces[selection.row + 2][selection.column + 2] === EMPTY ||
+  r === selection.row - 2 && c === selection.column - 2 && (pieces[selection.row - 1][selection.column - 1] === BLACK_PIECE || pieces[selection.row - 1][selection.column - 1] === BLACK_KING) && pieces[selection.row - 2][selection.column - 2] === EMPTY ||
+  r === selection.row + 2 && c === selection.column - 2 && (pieces[selection.row + 1][selection.column - 1] === BLACK_PIECE || pieces[selection.row + 1][selection.column - 1] === BLACK_KING) && pieces[selection.row + 2][selection.column - 2] === EMPTY)){
+  
     if (r === selection.row + 2 && c === selection.column - 2){
       pieces[selection.row + 1][selection.column - 1] = EMPTY;
     }
@@ -220,12 +267,40 @@ function mouseClicked(){
 function promotion(){
   for (let r = 0; r < ROWS; r++) {
     for (let c = 0; c < COLS; c++) {
-      if (pieces[r][c] === BLACK_PIECE && pieces[r] === 0) {
-        pieces[r][c] === BLACK_KING;
+      if (pieces[r][c] === BLACK_PIECE && r === 0) {
+        pieces[r][c] = BLACK_KING;
       }
-      else if (pieces[r][c] === RED_PIECE && pieces[r] === 7){
-        pieces[r][c] === RED_KING;
+      else if (pieces[r][c] === RED_PIECE && r === 7){
+        pieces[r][c] = RED_KING;
       }
     }
+  }
+}
+
+function highlighter(r, c){
+  if (r < 0 || r >= ROWS || c < 0 || c >= COLS){
+    return;
+  }
+
+  if (pieces[r][c] !== EMPTY){
+    return;
+  }
+}
+
+function highlightValidMoves(){
+  if (selection === null){
+    return;
+  }
+
+  let r = selection.row;
+  let c = selection.column;
+
+  push();
+  fill(255, 255, 0, 150);
+  noStroke();
+
+  if (piece === BLACK_PIECE){
+    highlighter(r - 1, c - 1);
+    highlighter(r - 1, c + 1);
   }
 }
