@@ -68,6 +68,7 @@ function draw() {
   drawBoard();
   drawPieces();
   promotion();
+  highlightValidMoves();
   glow += 0.08;
 }
 
@@ -122,7 +123,7 @@ function drawPieces(){
         let changingSize = gridSize * (0.8 + glowPulse * 0.05);
 
         fill(0, 100, brightness);
-        circle(gridSize * (c + 0.5), gridSize * (r + 0.5), changingSize)
+        circle(gridSize * (c + 0.5), gridSize * (r + 0.5), changingSize);
       }
       else if (pieces[r][c] === BLACK_KING){
         
@@ -150,7 +151,7 @@ function mouseClicked(){
   let moved = false;
   
   if (selection === null){
-    if ((turn === true && (pieces[r][c] === BLACK_PIECE || pieces[r][c] === BLACK_KING)) || (turn === false && (pieces[r][c] === RED_PIECE || pieces[r][c] === RED_KING))){
+    if (turn === true && (pieces[r][c] === BLACK_PIECE || pieces[r][c] === BLACK_KING) || turn === false && (pieces[r][c] === RED_PIECE || pieces[r][c] === RED_KING)){
       selection = {
         row: r,
         column: c
@@ -158,7 +159,7 @@ function mouseClicked(){
     }
     return;
   }
-  if ((turn === true && (pieces[r][c] === BLACK_PIECE || pieces[r][c] === BLACK_KING)) || (turn === false && (pieces[r][c] === RED_PIECE || pieces[r][c] === RED_KING))){
+  if (turn === true && (pieces[r][c] === BLACK_PIECE || pieces[r][c] === BLACK_KING) || turn === false && (pieces[r][c] === RED_PIECE || pieces[r][c] === RED_KING)){
     selection = {
       row: r,
       column: c
@@ -285,6 +286,16 @@ function highlighter(r, c){
   if (pieces[r][c] !== EMPTY){
     return;
   }
+
+  push();
+  
+  fill(255, 255, 0, 50);
+  noStroke();
+
+  circle(gridSize * (c + 0.5), gridSize * (r + 0.5), gridSize * 0.3);
+
+  pop();
+
 }
 
 function highlightValidMoves(){
@@ -295,12 +306,64 @@ function highlightValidMoves(){
   let r = selection.row;
   let c = selection.column;
 
-  push();
-  fill(255, 255, 0, 150);
-  noStroke();
-
-  if (piece === BLACK_PIECE){
+  if (pieces[r][c] === BLACK_PIECE){
     highlighter(r - 1, c - 1);
     highlighter(r - 1, c + 1);
+    if (pieces[r - 1][c - 1] === RED_PIECE){
+      highlighter(r - 2, c - 2);
+    }
+    else if (pieces[r - 1][c + 1] === RED_PIECE){
+      highlighter(r - 2, c + 2);
+    }
+  }
+  else if (pieces[r][c] === RED_PIECE){
+    highlighter(r + 1, c - 1);
+    highlighter(r + 1, c + 1);
+    if (pieces[r + 1][c - 1] === BLACK_PIECE){
+      highlighter(r + 2, c - 2);
+    }
+    else if (pieces[r + 1][c + 1] === BLACK_PIECE){
+      highlighter(r + 2, c + 2);
+    }
+  }
+
+  else if (pieces[r][c] === BLACK_KING){
+    highlighter(r - 1, c - 1);
+    highlighter(r - 1, c + 1);
+    highlighter(r + 1, c - 1);
+    highlighter(r + 1, c + 1);
+
+    if (pieces[r - 1][c - 1] === RED_PIECE || pieces[r - 1][c - 1] === RED_KING){
+      highlighter(r - 2, c - 2);
+    }
+    else if (pieces[r - 1][c + 1] === RED_PIECE || pieces[r - 1][c + 1] === RED_KING ){
+      highlighter(r - 2, c + 2);
+    }
+    else if (pieces[r + 1][c - 1] === RED_PIECE || pieces[r + 1][c - 1] === RED_KING){
+      highlighter(r + 2, c - 2);
+    }
+    else if (pieces[r + 1][c + 1] === RED_PIECE || pieces[r + 1][c + 1] === RED_KING){
+      highlighter(r + 2, c + 2);
+    }
+  }
+
+  else if (pieces[r][c] === RED_KING){
+    highlighter(r - 1, c - 1);
+    highlighter(r - 1, c + 1);
+    highlighter(r + 1, c - 1);
+    highlighter(r + 1, c + 1);
+
+    if (pieces[r - 1][c - 1] === BLACK_PIECE || pieces[r - 1][c - 1] === BLACK_KING){
+      highlighter(r - 2, c - 2);
+    }
+    else if (pieces[r - 1][c + 1] === BLACK_PIECE || pieces[r - 1][c + 1] === BLACK_KING ){
+      highlighter(r - 2, c + 2);
+    }
+    else if (pieces[r + 1][c - 1] === BLACK_PIECE || pieces[r + 1][c - 1] === BLACK_KING){
+      highlighter(r + 2, c - 2);
+    }
+    else if (pieces[r + 1][c + 1] === BLACK_PIECE || pieces[r + 1][c + 1] === BLACK_KING){
+      highlighter(r + 2, c + 2);
+    }
   }
 }
