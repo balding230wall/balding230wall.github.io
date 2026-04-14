@@ -11,6 +11,7 @@
 - [Rectangular Grid](rectangular-grid)
 - [Game of Life](life)
 - [Character in Grid](character-in-grid)
+- [walker OOP](walker)
 
 
 ## Assignments
