@@ -19,6 +19,9 @@ const BLACK_KING = 4;
 const WHITE_BOARD = 5;
 const BROWN_BOARD = 6;
 const EMPTY = 0;
+const PIECESIZE = 0.8;
+const GLOWFACTOR = 0.08;
+const HIGHLIGHTER_SIZE = 0.3;
 
 //sets variables
 let gridSize;
@@ -39,10 +42,10 @@ function setup() {
   
   //sets the grid size
   if (windowWidth > windowHeight){
-    gridSize = windowHeight/8;
+    gridSize = windowHeight/COLS;
   }
   else{
-    gridSize = windowWidth/8;
+    gridSize = windowWidth/ROWS;
   }
   
   //initializes board
@@ -93,7 +96,7 @@ function draw() {
   displayWin();
 
   //animates the king glow effect
-  glow += 0.08;
+  glow += GLOWFACTOR;
 }
 
 function drawBoard(){
@@ -113,6 +116,16 @@ function drawBoard(){
 }
 
 function drawPieces(){
+  //sets constants that adjust the kings' glowing colors and changing sizes
+  const BLACK_GLOW_MULTIPLIER = 8;
+  const BLACK_GLOW_ADJUSTER = 20;
+  const RED_GLOW_MULTIPLIER = 15;
+  const RED_GLOW_ADJUSTER = 85;
+  const PIECE_SIZE_MULTIPLIER = 0.05;
+  const PIECE_SIZE_ADJUSTER = 0.8;
+
+
+
   for (let r = 0; r < ROWS; r++) {
     for (let c = 0; c < COLS; c++) {
 
@@ -124,7 +137,7 @@ function drawPieces(){
         stroke("yellow");
         strokeWeight(3);
       
-        circle(gridSize * (c + 0.5), gridSize * (r + 0.5), gridSize * 0.8);
+        circle(gridSize * (c + 0.5), gridSize * (r + 0.5), gridSize * PIECESIZE);
 
         pop();
       }
@@ -132,12 +145,12 @@ function drawPieces(){
       //Draws red pieces
       if (pieces[r][c] === RED_PIECE){
         fill("#8B0000");
-        circle(gridSize * (c + 0.5), gridSize * (r + 0.5), gridSize * 0.8);
+        circle(gridSize * (c + 0.5), gridSize * (r + 0.5), gridSize * PIECESIZE);
       }
       //Draws black pieces
       else if (pieces[r][c] === BLACK_PIECE){
         fill("black");
-        circle(gridSize * (c + 0.5), gridSize * (r + 0.5), gridSize * 0.8);
+        circle(gridSize * (c + 0.5), gridSize * (r + 0.5), gridSize * PIECESIZE);
       }
 
       //Draws kings with glowing, pulsing animation
@@ -150,9 +163,9 @@ function drawPieces(){
       if (pieces[r][c] === RED_KING){
         
         //changes color
-        let brightness = 85 + glowPulse * 15;
+        let brightness = RED_GLOW_ADJUSTER + glowPulse * RED_GLOW_MULTIPLIER;
         //changes size
-        let changingSize = gridSize * (0.8 + glowPulse * 0.05);
+        let changingSize = gridSize * (PIECE_SIZE_ADJUSTER + glowPulse * PIECE_SIZE_MULTIPLIER);
 
         //draws the changing circles
         fill(0, 100, brightness);
@@ -161,9 +174,9 @@ function drawPieces(){
       else if (pieces[r][c] === BLACK_KING){
         
         //changes color
-        let brightness = 10 + glowPulse * 8;
+        let brightness = BLACK_GLOW_ADJUSTER + glowPulse * BLACK_GLOW_MULTIPLIER;
         //changes size
-        let changingSize = gridSize * (0.8 + glowPulse * 0.05);
+        let changingSize = gridSize * (PIECE_SIZE_ADJUSTER + glowPulse * PIECE_SIZE_MULTIPLIER);
         
         //draws the changing circles
         fill(0, 0, brightness);
@@ -214,6 +227,8 @@ function mouseClicked(){
     return;
   }
 
+
+
   //Normal movement for a black piece. Checks for correct turn, piece selection, square to move to, and if that square is empty
   if (turn === true && pieces[selection.row][selection.column] === BLACK_PIECE && r === selection.row - 1 && (c === selection.column + 1 || c === selection.column - 1) && pieces[r][c] === EMPTY){
     //Moves piece
@@ -223,6 +238,7 @@ function mouseClicked(){
     //Signals that a move has been made
     moved = true;
   }
+  
   //Normal movement for a red piece. Checks for correct turn, piece selection, square to move to, and if that square is empty
   else if (turn === false && pieces[selection.row][selection.column] === RED_PIECE && r === selection.row + 1 && (c === selection.column + 1 || c === selection.column - 1) && pieces[r][c] === EMPTY){
     //Moves piece
@@ -233,9 +249,13 @@ function mouseClicked(){
     moved = true;
   }
   
+
+
   //Capture logic for black piece
-  else if (turn === true && pieces[selection.row][selection.column] === BLACK_PIECE && r === selection.row - 2 && (c === selection.column + 2 && inBounds(selection.row - 1, selection.column + 1) && inBounds(selection.row - 2, selection.column + 2) && pieces[selection.row - 1][selection.column + 1] === RED_PIECE && pieces[selection.row - 2][selection.column + 2] === EMPTY || 
+  else if (turn === true && pieces[selection.row][selection.column] === BLACK_PIECE && r === selection.row - 2 &&
+ (c === selection.column + 2 && inBounds(selection.row - 1, selection.column + 1) && inBounds(selection.row - 2, selection.column + 2) && pieces[selection.row - 1][selection.column + 1] === RED_PIECE && pieces[selection.row - 2][selection.column + 2] === EMPTY || 
   c === selection.column - 2 && inBounds(selection.row - 1, selection.column - 1) && inBounds(selection.row - 2, selection.column - 2) && pieces[selection.row - 1][selection.column - 1] === RED_PIECE && pieces[selection.row - 2][selection.column - 2] === EMPTY)){
+    
     if (r === selection.row - 2 && c === selection.column - 2){
       //Check if in bounds
       if (inBounds(selection.row - 1, selection.column - 1)){
@@ -254,6 +274,7 @@ function mouseClicked(){
         redCounter--;
       }
     }
+    
     //Moves piece
     pieces[r][c] = pieces[selection.row][selection.column];
     //Removes piece from old square
@@ -263,8 +284,10 @@ function mouseClicked(){
   }
   
   //Capture logic for red piece
-  else if (turn === false && pieces[selection.row][selection.column] === RED_PIECE && r === selection.row + 2 && (c === selection.column + 2 && inBounds(selection.row + 1, selection.column + 1) && inBounds(selection.row + 2, selection.column + 2) && pieces[selection.row + 1][selection.column + 1] === BLACK_PIECE && pieces[selection.row + 2][selection.column + 2] === EMPTY || 
+  else if (turn === false && pieces[selection.row][selection.column] === RED_PIECE && r === selection.row + 2 &&
+ (c === selection.column + 2 && inBounds(selection.row + 1, selection.column + 1) && inBounds(selection.row + 2, selection.column + 2) && pieces[selection.row + 1][selection.column + 1] === BLACK_PIECE && pieces[selection.row + 2][selection.column + 2] === EMPTY || 
   c === selection.column - 2 && inBounds(selection.row + 1, selection.column - 1) && inBounds(selection.row + 2, selection.column - 2) && pieces[selection.row + 1][selection.column - 1] === BLACK_PIECE && pieces[selection.row + 2][selection.column - 2] === EMPTY)){
+    
     if (r === selection.row + 2 && c === selection.column - 2){
       //Check if in bounds
       if (inBounds(selection.row + 1, selection.column - 1)){
@@ -283,6 +306,7 @@ function mouseClicked(){
         blackCounter--;
       }
     }
+    
     //Moves piece
     pieces[r][c] = pieces[selection.row][selection.column];
     //Removes piece from old square
@@ -291,6 +315,8 @@ function mouseClicked(){
     moved = true;
   }
 
+  
+  
   //Normal movement for a black king
   else if (turn === true && pieces[selection.row][selection.column] === BLACK_KING && pieces[r][c] === EMPTY && (r === selection.row + 1 || r === selection.row - 1) && (c === selection.column + 1 || c === selection.column - 1)){
     //Moves king
@@ -300,6 +326,7 @@ function mouseClicked(){
     //Indicate a move has been made
     moved = true;
   }
+  
   //Normal movement for a red king
   else if (turn === false && pieces[selection.row][selection.column] === RED_KING && pieces[r][c] === EMPTY && (r === selection.row + 1 || r === selection.row - 1) && (c === selection.column + 1 || c === selection.column - 1)){
     //Moves king
@@ -310,8 +337,10 @@ function mouseClicked(){
     moved = true;
   }
   
+
   //Capture logic for black king
-  else if (turn === true && pieces[selection.row][selection.column] === BLACK_KING && (r === selection.row - 2 && c === selection.column + 2 && inBounds(selection.row - 1, selection.column + 1) && inBounds(selection.row - 2, selection.column + 2) && (pieces[selection.row - 1][selection.column + 1] === RED_PIECE || pieces[selection.row - 1][selection.column + 1] === RED_KING) && pieces[selection.row - 2][selection.column + 2] === EMPTY || 
+  else if (turn === true && pieces[selection.row][selection.column] === BLACK_KING &&
+ (r === selection.row - 2 && c === selection.column + 2 && inBounds(selection.row - 1, selection.column + 1) && inBounds(selection.row - 2, selection.column + 2) && (pieces[selection.row - 1][selection.column + 1] === RED_PIECE || pieces[selection.row - 1][selection.column + 1] === RED_KING) && pieces[selection.row - 2][selection.column + 2] === EMPTY || 
   r === selection.row + 2 && c === selection.column + 2 && inBounds(selection.row + 1, selection.column + 1) && inBounds(selection.row + 2, selection.column + 2) && (pieces[selection.row + 1][selection.column + 1] === RED_PIECE || pieces[selection.row + 1][selection.column + 1] === RED_KING) && pieces[selection.row + 2][selection.column + 2] === EMPTY ||
   r === selection.row - 2 && c === selection.column - 2 && inBounds(selection.row - 1, selection.column - 1) && inBounds(selection.row - 2, selection.column - 2) && (pieces[selection.row - 1][selection.column - 1] === RED_PIECE || pieces[selection.row - 1][selection.column - 1] === RED_KING) && pieces[selection.row - 2][selection.column - 2] === EMPTY ||
   r === selection.row + 2 && c === selection.column - 2 && inBounds(selection.row + 1, selection.column - 1) && inBounds(selection.row + 2, selection.column - 2) && (pieces[selection.row + 1][selection.column - 1] === RED_PIECE || pieces[selection.row + 1][selection.column - 1] === RED_KING) && pieces[selection.row + 2][selection.column - 2] === EMPTY)){
@@ -341,7 +370,8 @@ function mouseClicked(){
   }
 
   //capture logic for red king
-  else if (turn === false && pieces[selection.row][selection.column] === RED_KING && (r === selection.row - 2 && c === selection.column + 2 && inBounds(selection.row - 1, selection.column + 1) && inBounds(selection.row - 2, selection.column + 2) && (pieces[selection.row - 1][selection.column + 1] === BLACK_PIECE || pieces[selection.row - 1][selection.column + 1] === BLACK_KING) && pieces[selection.row - 2][selection.column + 2] === EMPTY || 
+  else if (turn === false && pieces[selection.row][selection.column] === RED_KING &&
+ (r === selection.row - 2 && c === selection.column + 2 && inBounds(selection.row - 1, selection.column + 1) && inBounds(selection.row - 2, selection.column + 2) && (pieces[selection.row - 1][selection.column + 1] === BLACK_PIECE || pieces[selection.row - 1][selection.column + 1] === BLACK_KING) && pieces[selection.row - 2][selection.column + 2] === EMPTY || 
   r === selection.row + 2 && c === selection.column + 2 && inBounds(selection.row + 1, selection.column + 1) && inBounds(selection.row + 2, selection.column + 2) && (pieces[selection.row + 1][selection.column + 1] === BLACK_PIECE || pieces[selection.row + 1][selection.column + 1] === BLACK_KING) && pieces[selection.row + 2][selection.column + 2] === EMPTY ||
   r === selection.row - 2 && c === selection.column - 2 && inBounds(selection.row - 1, selection.column - 1) && inBounds(selection.row - 2, selection.column - 2) && (pieces[selection.row - 1][selection.column - 1] === BLACK_PIECE || pieces[selection.row - 1][selection.column - 1] === BLACK_KING) && pieces[selection.row - 2][selection.column - 2] === EMPTY ||
   r === selection.row + 2 && c === selection.column - 2 && inBounds(selection.row + 1, selection.column - 1) && inBounds(selection.row + 2, selection.column - 2) && (pieces[selection.row + 1][selection.column - 1] === BLACK_PIECE || pieces[selection.row + 1][selection.column - 1] === BLACK_KING) && pieces[selection.row + 2][selection.column - 2] === EMPTY)){
@@ -378,13 +408,14 @@ function mouseClicked(){
 }
 
 function promotion(){
+
   //Promotes black and red pieces if they reach the other side
   for (let r = 0; r < ROWS; r++) {
     for (let c = 0; c < COLS; c++) {
       if (pieces[r][c] === BLACK_PIECE && r === 0) {
         pieces[r][c] = BLACK_KING;
       }
-      else if (pieces[r][c] === RED_PIECE && r === 7){
+      else if (pieces[r][c] === RED_PIECE && r === ROWS - 1){
         pieces[r][c] = RED_KING;
       }
     }
@@ -408,7 +439,7 @@ function highlighter(r, c){
   fill(255, 255, 0, 50);
   noStroke();
 
-  circle(gridSize * (c + 0.5), gridSize * (r + 0.5), gridSize * 0.3);
+  circle(gridSize * (c + 0.5), gridSize * (r + 0.5), gridSize * HIGHLIGHTER_SIZE);
 
   pop();
 
