@@ -13,9 +13,9 @@ class Particle {
     this.dx = random(-5, 5);
     this.dy = random(-5, 5);
     this.radius = 3;
-    this.r = 255;
-    this.g = 0;
-    this.b = 0;
+    this.r = random(0, 255);
+    this.g = random(0, 255);
+    this.b = random(0, 255);
     this.opacity = 255;
   }
 
@@ -31,6 +31,10 @@ class Particle {
     fill(this.r, this.g, this.b, this.opacity);
     circle(this.x, this.y, this.radius * 2);
   }
+
+  isDead(){
+    return this.opacity <= 0;
+  }
 }
 
 let theFireworks = [];
@@ -43,12 +47,18 @@ function setup() {
 function draw() {
   background("Black");
   for (let someFirework of theFireworks){
-    someFirework.update();
-    someFirework.display();
+    if (someFirework.isDead()){
+      let index = theFireworks.indexOf(someFirework);
+      theFireworks.splice(index, 1);
+    }
+    else{
+      someFirework.update();
+      someFirework.display();
+    }
   }
 }
 
-function mousePressed(){
+function mouseWheel(){
   for (let i = 0; i < NUMBER_OF_FIREWORKS_PER_CLICK; i++){
     let aFirework = new Particle(mouseX, mouseY);
     theFireworks.push(aFirework);
