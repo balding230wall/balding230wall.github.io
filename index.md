@@ -14,6 +14,7 @@
 - [walker OOP](walker)
 - [Fireworks OOP](fireworks)
 - [Ball Collision OOP](ball-oop)
+- [Connected Nodes](connected-nodes)
 
 
 ## Assignments
