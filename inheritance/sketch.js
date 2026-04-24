@@ -22,7 +22,7 @@ class Vehicle{
 
 class Car extends Vehicle{
   constructor(name) {
-    super("Car", name);
+    super("car", name);
   }
 
   getName(){
