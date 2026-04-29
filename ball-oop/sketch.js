@@ -63,7 +63,7 @@ function draw() {
   for (let ball of ballArray){
     ball.move();
     for (let otherBall of ballArray){
-      if(ball !== otherBall){
+      if (ball !== otherBall){
         ball.bounceOff(otherBall);
       }
     }
